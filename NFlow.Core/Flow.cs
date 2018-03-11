@@ -5,42 +5,64 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NFlow.Core.Middlewares;
 
 namespace NFlow.Core
 {
-    public class Flow<T>
+    public sealed class Flow<T>
     {
+        private Guid _id = Guid.NewGuid();
+
         private Boolean isSubFlow = false;
-        public FlowContext<T> Context { get; } = new FlowContext<T>();
-        public FlowActions<T> Actions { get; }
+        private FlowContext<T> Context { get; set; }
+        public MiddlewareManager<T> TracingProviders { get; } = new MiddlewareManager<T>();
+        public FlowActions<T> Actions { get; } = new FlowActions<T>();
+        public FlowVariables DefaultVariables { get; } = new FlowVariables();
+
+        public Guid Id => _id;
 
         public Flow()
         {
-            Actions = new FlowActions<T>(Context);
-        }
-        public Flow(FlowContext<T> context) : this()
-        {
-            Context = context;
-            Actions = new FlowActions<T>(context);
+            Actions = new FlowActions<T>();
         }
 
-        public Boolean IsSubFlow() => isSubFlow;
-
-        public Flow<T> IsSubFlow(Boolean value)
+        /// <summary>
+        /// Trigger the execution of the flow passing a model
+        /// </summary>
+        /// <param name="context"></param>
+        public void Execute(T context)
         {
-            isSubFlow = value;
-            return this;
+            Execute(new FlowContext<T>(context));
         }
 
-        public void Execute()
+        /// <summary>
+        /// Trigger the execution of the flow passing an existing context
+        /// </summary>
+        /// <param name="context"></param>
+        public void Execute(FlowContext<T> context)
         {
-            foreach (var task in Actions)
+            this.Context = context;
+            this.Context.Variables.Merge(DefaultVariables, false);
+            
+            foreach (var action in Actions)
             {
-                // trace the execution
-                Context.ExecutionTrace.Add(task.ToString());
+                TracingProviders.OnActionExecuting(action);
 
-                task.Execute(Context);
+                action.Execute(Context);
+
+                TracingProviders.OnActionExecuted(action);
             }
+        }
+
+        /// <summary>
+        /// Register a flow middleware
+        /// </summary>
+        /// <param name="middleware"></param>
+        /// <returns></returns>
+        public Flow<T> Register(IFlowMiddleware<T> middleware)
+        {
+            TracingProviders.Register(middleware);
+            return this;
         }
     }
 }

@@ -13,7 +13,7 @@ namespace NFlow.Core
 
         public static String ToDotNotation<T>(this Flow<T> flow, DotNotationSettings settings = null)
         {
-            var provider = new DotNotationProvider<T>(settings);
+            var provider = new DotNotation.DotNotationProvider<T>(settings);
             return provider.Convert(flow);
         }
 

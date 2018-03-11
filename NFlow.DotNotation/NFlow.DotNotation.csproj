@@ -44,11 +44,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActionDotRepresentation.cs" />
-    <Compile Include="DotNotationProvider.cs" />
     <Compile Include="DotNotationSettings.cs" />
     <Compile Include="DotShapes.cs" />
     <Compile Include="Extensions\ExportFlowToDotNotation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="DotNode.cs" />
+    <Compile Include="DotNodeReference.cs" />
+    <Compile Include="DotNotationProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NFlow.Core\NFlow.Core.csproj">
@@ -59,5 +61,6 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

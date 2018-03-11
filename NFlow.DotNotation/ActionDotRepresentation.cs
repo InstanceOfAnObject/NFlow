@@ -30,6 +30,9 @@ namespace NFlow.DotNotation
         public String Text { get; private set; }
         public DotShape Shape { get; private set; }
 
+        public List<ActionDotRepresentation<T>> SubActions { get; } = new List<ActionDotRepresentation<T>>();
+        public List<(ActionDotRepresentation<T> from, ActionDotRepresentation<T> to, String name)> SubActionsLinks { get; } = new List<(ActionDotRepresentation<T> from, ActionDotRepresentation<T> to, string name)>();
+
         public ActionDotRepresentation(Guid id)
         {
             this.Id = id;

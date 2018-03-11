@@ -15,31 +15,47 @@ namespace NFlow.Core.Actions
 
         public String Name { get; set; }
         public Object Value { get; set; } = null;
-        public Func<FlowContext<T>, Object> Function { get; set; } = null;
+        public Action<FlowContext<T>> Method { get; set; } = null;
 
         public SetVariableAction() { }
-        public SetVariableAction(String name, Object value)
+        public SetVariableAction(String name, String value)
+        {
+            Name = name;
+            Value = value;
+        }
+        public SetVariableAction(String name, Decimal value)
         {
             Name = name;
             Value = value;
         }
 
-        public SetVariableAction(String name, Func<FlowContext<T>, Object> value)
+        public SetVariableAction(String name, Boolean value)
         {
             Name = name;
-            Function = value;
+            Value = value;
+        }
+
+        public SetVariableAction(String name, DateTime value)
+        {
+            Name = name;
+            Value = value;
+        }
+
+        public SetVariableAction(Action<FlowContext<T>> method)
+        {
+            Method = method;
         }
 
         public override void Execute(FlowContext<T> context)
         {
             if(Value != null)
                 context.Variables.Set(Name, Value);
-            else if (Function != null)
-                context.Variables.Set(Name, Function.Invoke(context));
+            else if (Method != null)
+                Method.Invoke(context);
 
         }
 
-        public override string Text { get; set; }
+        public override string Text { get; set; } = "Set Value";
         public override NotationObjectTypes NotationObjectType { get; set; }
 
     }

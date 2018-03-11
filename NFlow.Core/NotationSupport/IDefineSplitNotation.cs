@@ -15,7 +15,7 @@ namespace NFlow.Core.NotationSupport
     public interface IDefineSplitNotation<T> : IDefineSimpleNotation
     {
 
-        (IDefineSimpleNotation Action, Dictionary<String, FlowActions<T>> InnerFlows) ToNotation();
+        (IDefineSimpleNotation Action, Dictionary<FlowActions<T>, String> InnerFlows) ToNotation();
 
     }
 }

@@ -13,87 +13,92 @@ namespace NFlow.Core.Actions.Core
     {
         Guid _id = Guid.NewGuid();
 
-        private Func<FlowContext<T>, Boolean> Condition { get; set; }
-        private Action<FlowActions<T>> TrueActions { get; set; }
-        private Action<FlowActions<T>> FalseActions { get; set; }
-
-        String trueLinkText = "True";
-        String falseLinkText = "False";
+        private List<ConditionFlow<T>> ConditionFlows { get; set; } = new List<ConditionFlow<T>>();
 
         public IfAction() { }
-        public IfAction(Func<FlowContext<T>, Boolean> condition, Action<FlowActions<T>> trueActions, Action<FlowActions<T>> falseActions)
+        public IfAction(Func<FlowContext<T>, Boolean> condition, Action<FlowActions<T>> action, String text = Defaults.ConditionText, String actionText = Defaults.ConditionActionText)
         {
-            this.Condition = condition;
-            this.TrueActions = trueActions;
-            this.FalseActions = falseActions;
+            this.Text = text;
+            ConditionFlows.Add(new ConditionFlow<T>() { Condition = condition, Action = action, Text = actionText });
         }
 
-        public IfAction(IfActionMetadata metadata, Func<FlowContext<T>, Boolean> condition, Action<FlowActions<T>> trueActions, Action<FlowActions<T>> falseActions)
+        public IfAction<T> ElseIf(Func<FlowContext<T>, Boolean> condition, Action<FlowActions<T>> action, String actionText = Defaults.ConditionActionText)
         {
-            this.Text = metadata.Text;
-            this.trueLinkText = metadata.TrueLinkText;
-            this.falseLinkText = metadata.FalseLinkText;
-
-            this.Condition = condition;
-            this.TrueActions = trueActions;
-            this.FalseActions = falseActions;
+            ConditionFlows.Add(new ConditionFlow<T>() { Condition = condition, Action = action, Text = actionText });
+            return this;
         }
 
-        public IfAction(
-            Func<FlowContext<T>, Boolean> condition,
-            (String linkName, Action<FlowActions<T>> actions) trueActions,
-            (String linkName, Action<FlowActions<T>> actions) falseActions) : this(condition, trueActions.actions, falseActions.actions)
+        public IFlowAction<T> Else(Action<FlowActions<T>> action, String actionText = Defaults.ConditionActionText)
         {
-            trueLinkText = trueActions.linkName;
-            falseLinkText = falseActions.linkName;
+            ConditionFlows.Add(new ConditionFlow<T>() { Condition = null, Action = action, Text = actionText });
+            return this;
         }
 
         public override void Execute(FlowContext<T> context)
         {
-            Flow<T> conditionFlow = new Flow<T>(context);
+            Flow<T> conditionFlow = new Flow<T>();
 
-            if (Condition.Invoke(context))
-                TrueActions(conditionFlow.Actions);
-            else
-                FalseActions(conditionFlow.Actions);
-
-            conditionFlow.IsSubFlow(true).Execute();
-        }
-
-        Flow<T> dotTrueFlow;
-        Flow<T> dotFalseFlow;
-        public override string Text { get; set; } = "Condition";
-        public override NotationObjectTypes NotationObjectType { get; set; } = NotationObjectTypes.Decision;
-
-        public (IDefineSimpleNotation Action, Dictionary<string, FlowActions<T>> InnerFlows) ToNotation()
-        {
-            // Make sure the inner flows are only generated once in order to retain the actions IDs
-            if (dotTrueFlow == null && dotFalseFlow == null)
+            foreach (var cflow in ConditionFlows)
             {
-                dotTrueFlow = new Flow<T>();
-                dotFalseFlow = new Flow<T>();
-
-                TrueActions(dotTrueFlow.Actions);
-                FalseActions(dotFalseFlow.Actions);
+                if (cflow.Condition == null) // ELSE condition (no condition)
+                {
+                    cflow.Action(conditionFlow.Actions);
+                    break;
+                }
+                if (cflow.Condition.Invoke(context))    // evaluate condition
+                {
+                    cflow.Action(conditionFlow.Actions);
+                    break;
+                }
             }
 
-            //var action = new ActionDotRepresentation<T>(Id, DotCaption, DotShape);
-            Dictionary<String, FlowActions<T>> innerFlows =
-                new Dictionary<string, FlowActions<T>>()
+            conditionFlow.Execute(context);
+        }
+
+        List<(Flow<T> Flow, String Text)> dotFlows;
+        public override string Text { get; set; } = Defaults.ConditionText;
+        public override NotationObjectTypes NotationObjectType { get; set; } = NotationObjectTypes.Decision;
+
+        public (IDefineSimpleNotation Action, Dictionary<FlowActions<T>, String> InnerFlows) ToNotation()
+        {
+            // Make sure the inner flows are only generated once in order to retain the actions IDs
+            if (dotFlows == null)
+            {
+                dotFlows = new List<(Flow<T> flow, string text)>();
+
+                foreach (var cflow in ConditionFlows)
                 {
-                        { this.trueLinkText, dotTrueFlow.Actions },
-                        { this.falseLinkText, dotFalseFlow.Actions }
-                };
+                    Flow<T> flow = new Flow<T>();
+                    cflow.Action(flow.Actions);
+                    dotFlows.Add((flow, cflow.Text));
+                }
+            }
+
+            // create the inner flows collection
+            Dictionary<FlowActions<T>, String> innerFlows = new Dictionary<FlowActions<T>, String>();
+            foreach (var dflow in dotFlows)
+            {
+                innerFlows.Add(dflow.Flow.Actions, dflow.Text);
+            }
 
             return (this, innerFlows);
         }
 
     }
 
-    public class IfActionMetadata
+    //public class IfActionMetadata
+    //{
+    //    public String Text { get; set; }
+    //    public String TrueLinkText { get; set; }
+    //    public String FalseLinkText { get; set; }
+    //}
+
+    public class ConditionFlow<T>
     {
-        public String Text { get; set; }
-        public String TrueLinkText { get; set; }
-        public String FalseLinkText { get; set; }
+        public Func<FlowContext<T>, Boolean> Condition { get; set; }
+
+        public Action<FlowActions<T>> Action { get; set; }
+
+        public String Text { get; set; } = String.Empty;
     }
 }

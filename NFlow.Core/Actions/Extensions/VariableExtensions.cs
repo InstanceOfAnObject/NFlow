@@ -11,13 +11,31 @@ namespace NFlow.Core
     public static class VariableExtensions
     {
 
-        public static FlowActions<T> Set<T>(this FlowActions<T> tasks, String name, Object value)
+        public static FlowActions<T> Set<T>(this FlowActions<T> tasks, String name, String value)
         {
             return tasks.Add(new SetVariableAction<T>(name, value));
         }
-        public static FlowActions<T> Set<T>(FlowActions<T> tasks, String name, Func<FlowContext<T>, Object> value)
+        public static FlowActions<T> Set<T>(this FlowActions<T> tasks, String name, Decimal value)
         {
             return tasks.Add(new SetVariableAction<T>(name, value));
+        }
+        public static FlowActions<T> Set<T>(this FlowActions<T> tasks, String name, Boolean value)
+        {
+            return tasks.Add(new SetVariableAction<T>(name, value));
+        }
+        public static FlowActions<T> Set<T>(this FlowActions<T> tasks, String name, DateTime value)
+        {
+            return tasks.Add(new SetVariableAction<T>(name, value));
+        }
+
+        //public static FlowActions<T> Set<T>(this FlowActions<T> tasks, Action<T> model)
+        //{
+        //    return tasks.Add(new SetVariableAction<T>(model));
+        //}
+
+        public static FlowActions<T> Set<T>(this FlowActions<T> tasks, Action<FlowContext<T>> context)
+        {
+            return tasks.Add(new SetVariableAction<T>(context));
         }
 
     }
