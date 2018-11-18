@@ -1,0 +1,17 @@
+﻿{
+  "Name": "rule1",
+  "Operations": [
+    {
+      "Type": "operation fully qualified type",
+      "Config": {
+
+      }
+    },
+    {
+      "Type": "operation fully qualified type",
+      "Config": {
+
+      }
+    }
+  ]
+}

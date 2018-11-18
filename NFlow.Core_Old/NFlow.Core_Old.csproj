@@ -1,19 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{51D09F53-5043-4D09-ADAF-891078E5592F}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>NFlow.CLI</RootNamespace>
-    <AssemblyName>NFlow.CLI</AssemblyName>
+    <ProjectGuid>{AEC2809D-1E37-44B0-B7D9-0F2587CF7855}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>NFlow.Core</RootNamespace>
+    <AssemblyName>NFlow.Core</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -45,22 +43,37 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="Actions\AdHocAction.cs" />
+    <Compile Include="Actions\Base\BaseFlowAction.cs" />
+    <Compile Include="Actions\Extensions\ActionExtentions.cs" />
+    <Compile Include="Actions\Extensions\ActionsGroupExtensions.cs" />
+    <Compile Include="Actions\Extensions\FlowControlExtensions.cs" />
+    <Compile Include="Actions\Extensions\PromptExtensions.cs" />
+    <Compile Include="Actions\Extensions\VariableExtensions.cs" />
+    <Compile Include="Actions\FlowActions.cs" />
+    <Compile Include="Actions\Base\GenericActionGroup.cs" />
+    <Compile Include="Actions\ActionsGroupAction.cs" />
+    <Compile Include="Actions\IfAction.cs" />
+    <Compile Include="Actions\Base\IFlowAction.cs" />
+    <Compile Include="Actions\Base\IFlowDescriptor.cs" />
+    <Compile Include="Actions\PromptAction.cs" />
+    <Compile Include="Actions\SetVariableAction.cs" />
+    <Compile Include="Flow.cs" />
+    <Compile Include="Global\Defaults.cs" />
+    <Compile Include="Global\FlowContext.cs" />
+    <Compile Include="Global\FlowVariables.cs" />
+    <Compile Include="Global\ValueModel.cs" />
+    <Compile Include="Middlewares\IFlowMiddleware.cs" />
+    <Compile Include="NotationSupport\IDefineSimpleNotation.cs" />
+    <Compile Include="NotationSupport\IDefineSplitNotation.cs" />
+    <Compile Include="NotationSupport\NotationObjectTypes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Middlewares\Tracing\ConsoleMiddleware.cs" />
+    <Compile Include="Middlewares\MiddlewareManager.cs" />
+    <Compile Include="Middlewares\Tracing\TracingTimer.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\NFlow.Core\NFlow.Core.csproj">
-      <Project>{aec2809d-1e37-44b0-b7d9-0f2587cf7855}</Project>
-      <Name>NFlow.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NFlow.DotNotation\NFlow.DotNotation.csproj">
-      <Project>{3d8d0b95-3082-409e-ac08-6d36f4fc6cb2}</Project>
-      <Name>NFlow.DotNotation</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
