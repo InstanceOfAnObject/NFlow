@@ -3,7 +3,7 @@ using Xunit;
 
 namespace NFlow.Tests
 {
-    public class UnitTest1
+    public class Serialization
     {
         [Fact]
         public void Test1()
