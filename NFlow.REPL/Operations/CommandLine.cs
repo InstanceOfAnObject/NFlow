@@ -3,19 +3,19 @@ using NFlow.Core;
 
 namespace NFlow.REPL
 {
-    public static class Cmd
+    public static class CommandLine
     {
-        public static IRule ConsoleOut(this IRule operation, string text)
+        public static IRule ConsoleOut(this IRule prev, string text)
         {
-            operation.AddOperation(new WriteLine(text));
+            prev.AddContinuation(new WriteLineOperation(text));
 
-            return operation;
+            return prev;
         }
 
-        public class WriteLine : IOperation
+        public class WriteLineOperation : IContinuation
         {
-            public WriteLine() { }
-            public WriteLine(string text)
+            public WriteLineOperation() { }
+            public WriteLineOperation(string text)
             {
                 Config = new WriteLineConfig() { Text = text };
             }
@@ -26,7 +26,7 @@ namespace NFlow.REPL
                 set;
             }
 
-            public void Execute()
+            public void Invoke(RuleContext context)
             {
                 Console.WriteLine((Config as WriteLineConfig).Text);
             }

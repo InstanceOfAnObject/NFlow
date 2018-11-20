@@ -13,6 +13,6 @@ namespace NFlow.Core
         /// <summary>
         /// Executes the operation
         /// </summary>
-        void Execute();
+        void Invoke(RuleContext context);
     }
 }

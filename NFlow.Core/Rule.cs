@@ -5,7 +5,7 @@ namespace NFlow.Core
 {
     public class Rule : IRule
     {
-        private List<IOperation> operations;
+        private List<IContinuation> continuations;
         public RuleContext context;
 
         public static IRule Define(string name)
@@ -22,7 +22,7 @@ namespace NFlow.Core
 
         public Rule(string name)
         {
-            operations = new List<IOperation>();
+            continuations = new List<IContinuation>();
             context = new RuleContext();
 
             Name = name;
@@ -33,18 +33,30 @@ namespace NFlow.Core
             get; set;
         }
 
-        public IReadOnlyList<IOperation> Operations => operations.AsReadOnly();
+        public IReadOnlyList<IContinuation> Continuations => continuations.AsReadOnly();
 
-        public void AddOperation(IOperation operation)
+        public void AddContinuation(IContinuation continuation)
         {
-            operations.Add(operation);
+            continuations.Add(continuation);
+        }
+
+        public object this[string name]
+        {
+            get
+            {
+                return context[name];
+            }
+            set
+            {
+                context[name] = value;
+            }
         }
 
         public void Execute()
         {
-            foreach (var operation in Operations)
+            foreach (var continuation in continuations)
             {
-                operation.Execute();
+                continuation.Invoke(context);
             }
         }
     }

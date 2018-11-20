@@ -10,10 +10,10 @@ namespace NFlow.Core
         public static string ToJson(this IRule rule)
         {
             JsonRule jsonRule = new JsonRule() { Name = rule.Name };
-            if(rule.Operations?.Count > 0)
+            if(rule.Continuations?.Count > 0)
             {
                 jsonRule.Operations = new List<JsonOperation>();
-                foreach (var op in rule.Operations)
+                foreach (var op in rule.Continuations)
                 {
                     jsonRule.Operations.Add(new JsonOperation() { Type = op.GetType().AssemblyQualifiedName, Config = op.Config });
                 }
@@ -32,10 +32,10 @@ namespace NFlow.Core
             {
                 Type type = Type.GetType(op.Type);
 
-                IOperation ruleOperation = Activator.CreateInstance(type) as IOperation;
-                ruleOperation.Config = op.Config;
+                IContinuation continuation = Activator.CreateInstance(type) as IContinuation;
+                continuation.Config = op.Config;
                     
-                rule.AddOperation(ruleOperation);
+                rule.AddContinuation(continuation);
             }
 
             return rule;

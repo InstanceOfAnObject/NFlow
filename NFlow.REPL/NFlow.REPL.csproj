@@ -8,7 +8,4 @@
   <ItemGroup>
     <ProjectReference Include="..\NFlow.Core\NFlow.Core.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Operations\" />
-  </ItemGroup>
 </Project>

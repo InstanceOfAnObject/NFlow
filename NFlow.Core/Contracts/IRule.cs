@@ -7,8 +7,10 @@ namespace NFlow.Core
     {
         string Name { get; set; }
 
-        void AddOperation(IOperation operation);
-        IReadOnlyList<IOperation> Operations { get; }
+        void AddContinuation(IContinuation continuation);
+        IReadOnlyList<IContinuation> Continuations { get; }
+
+        object this[string name] { get; set; }
 
         void Execute();
     }

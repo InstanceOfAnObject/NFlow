@@ -5,15 +5,29 @@ namespace NFlow.Core
 {
     public class RuleContext
     {
+        Dictionary<string, object> variables = new Dictionary<string, object>();
+
         public RuleContext()
         {
         }
 
-
-        /// <summary>
-        /// Variable bag to be used in the execution
-        /// </summary>
-        Dictionary<string, object> Variables = new Dictionary<string, object>();
+        public object this[string name]
+        {
+            get
+            {
+                if (variables.ContainsKey(name))
+                    return variables[name];
+                else
+                    return null;
+            }
+            set
+            {
+                if (variables.ContainsKey(name))
+                    variables[name] = value;
+                else
+                    variables.Add(name, value);
+            }
+        }
 
         /// <summary>
         /// Description of the tasks executed

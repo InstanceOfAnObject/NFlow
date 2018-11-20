@@ -5,8 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Contracts\" />
-    <Folder Include="Operations\" />
     <Folder Include="Serialization\" />
   </ItemGroup>
   <ItemGroup>
