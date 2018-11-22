@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace NFlow.Core
 {
     public interface IRule
     {
         string Name { get; set; }
-
-        void AddContinuation(IContinuation continuation);
-        IReadOnlyList<IContinuation> Continuations { get; }
+        
+        Flow Flow { get; }
 
         object this[string name] { get; set; }
 
-        void Execute();
+        Task Execute();
     }
 }

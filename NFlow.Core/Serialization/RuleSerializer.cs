@@ -10,10 +10,10 @@ namespace NFlow.Core
         public static string ToJson(this IRule rule)
         {
             JsonRule jsonRule = new JsonRule() { Name = rule.Name };
-            if(rule.Continuations?.Count > 0)
+            if(rule.Flow.Continuations?.Count > 0)
             {
                 jsonRule.Operations = new List<JsonOperation>();
-                foreach (var op in rule.Continuations)
+                foreach (var op in rule.Flow.Continuations)
                 {
                     jsonRule.Operations.Add(new JsonOperation() { Type = op.GetType().AssemblyQualifiedName, Config = op.Config });
                 }
@@ -26,8 +26,7 @@ namespace NFlow.Core
         {
             var jsonRule = JsonConvert.DeserializeObject<JsonRule>(json, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto });
 
-            Rule rule = new Rule(jsonRule.Name);
-
+            Flow definition = new Flow();
             foreach (var op in jsonRule.Operations)
             {
                 Type type = Type.GetType(op.Type);
@@ -35,9 +34,10 @@ namespace NFlow.Core
                 IContinuation continuation = Activator.CreateInstance(type) as IContinuation;
                 continuation.Config = op.Config;
                     
-                rule.AddContinuation(continuation);
+                definition.AddContinuation(continuation);
             }
 
+            Rule rule = new Rule(jsonRule.Name, definition);
             return rule;
         }
     }

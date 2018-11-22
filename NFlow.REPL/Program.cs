@@ -7,7 +7,7 @@ namespace NFlow.REPL
     {
         static void Main(string[] args)
         {
-            var rule = Rule.Define("Simple").ConsoleOut("Alex");
+            var rule = Rule.Define("Simple").ConsoleOut("Alex").End();
 
             var jsonRule = rule.ToJson();
             var rule2 = Rule.FromJson(jsonRule);

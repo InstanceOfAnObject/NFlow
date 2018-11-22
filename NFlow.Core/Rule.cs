@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace NFlow.Core
 {
     public class Rule : IRule
     {
-        private List<IContinuation> continuations;
+        private Flow flow;
         public RuleContext context;
 
-        public static IRule Define(string name)
+        public static Flow Define(string name = null, Flow definition = null)
         {
-            Rule result = new Rule(name);
-            return result;
+            Rule result = new Rule(name, definition);
+            return result.Flow;
         }
 
         public static IRule FromJson(string json)
@@ -20,9 +21,13 @@ namespace NFlow.Core
         }
 
 
-        public Rule(string name)
+        public Rule(string name = null, Flow flow = null)
         {
-            continuations = new List<IContinuation>();
+            if (flow == null)
+                flow = new Flow();
+            flow.Rule = this;
+
+            this.flow = flow;
             context = new RuleContext();
 
             Name = name;
@@ -33,12 +38,7 @@ namespace NFlow.Core
             get; set;
         }
 
-        public IReadOnlyList<IContinuation> Continuations => continuations.AsReadOnly();
-
-        public void AddContinuation(IContinuation continuation)
-        {
-            continuations.Add(continuation);
-        }
+        public Flow Flow => flow;
 
         public object this[string name]
         {
@@ -52,12 +52,9 @@ namespace NFlow.Core
             }
         }
 
-        public void Execute()
+        public Task Execute()
         {
-            foreach (var continuation in continuations)
-            {
-                continuation.Invoke(context);
-            }
+            return Flow.Execute(context);
         }
     }
 }

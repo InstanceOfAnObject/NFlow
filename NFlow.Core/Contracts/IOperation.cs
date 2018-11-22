@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading.Tasks;
+
 namespace NFlow.Core
 {
     public interface IOperation
@@ -13,6 +15,6 @@ namespace NFlow.Core
         /// <summary>
         /// Executes the operation
         /// </summary>
-        void Invoke(RuleContext context);
+        Task Invoke(RuleContext context);
     }
 }

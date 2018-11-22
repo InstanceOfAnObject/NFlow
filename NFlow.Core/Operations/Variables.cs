@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace NFlow.Core
 {
     public static class Varialbles
     {
-        public static IRule SetVar(this IRule rule, string name, object value)
+        public static Flow SetVar(this Flow rule, string name, object value)
         {
             rule.AddContinuation(new SetVarOperation(name, value));
             return rule;
@@ -22,10 +23,12 @@ namespace NFlow.Core
 
             public IOperationConfig Config { get; set; }
 
-            public void Invoke(RuleContext context)
+            public async Task Invoke(RuleContext context)
             {
-                var cfg = Config as VarConfig;
-                context[cfg.Name] = cfg.Value;
+                await Task.Factory.StartNew(() => {
+                    var cfg = Config as VarConfig;
+                    context[cfg.Name] = cfg.Value;
+                });
             }
         }
 

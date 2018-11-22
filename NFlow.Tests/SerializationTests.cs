@@ -10,7 +10,7 @@ namespace NFlow.Tests
         public void Serialization_SetVar()
         {
             // Set simple rule
-            var rule1 = Rule.Define("Simple").SetVar("year", 2018);
+            var rule1 = Rule.Define("Simple").SetVar("year", 2018).End();
 
             // serialize and deserialize it
             var jsonRule = rule1.ToJson();

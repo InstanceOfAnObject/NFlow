@@ -1,15 +1,16 @@
 ﻿using System;
+using System.Threading.Tasks;
 using NFlow.Core;
 
 namespace NFlow.REPL
 {
     public static class CommandLine
     {
-        public static IRule ConsoleOut(this IRule prev, string text)
+        public static Flow ConsoleOut(this Flow definition, string text)
         {
-            prev.AddContinuation(new WriteLineOperation(text));
+            definition.AddContinuation(new WriteLineOperation(text));
 
-            return prev;
+            return definition;
         }
 
         public class WriteLineOperation : IContinuation
@@ -26,9 +27,9 @@ namespace NFlow.REPL
                 set;
             }
 
-            public void Invoke(RuleContext context)
+            public async Task Invoke(RuleContext context)
             {
-                Console.WriteLine((Config as WriteLineConfig).Text);
+                await Console.Out.WriteLineAsync((Config as WriteLineConfig).Text);
             }
         }
 
