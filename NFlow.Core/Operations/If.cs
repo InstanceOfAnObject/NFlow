@@ -2,6 +2,8 @@
 using Microsoft.CodeAnalysis.Scripting;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace NFlow.Core
@@ -87,13 +89,13 @@ namespace NFlow.Core
 
         public async Task<bool> Evaluate(RuleContext context)
         {
-            var globals = new GlobalsDemo() { Input = 1 };
+            ScriptOptions options = ScriptOptions.Default;
+            options.WithImports("System");
 
-            var result = await CSharpScript.EvaluateAsync(strCondition, ScriptOptions.Default, globals);
-            if (result == null || !bool.TryParse(result.ToString(), out bool value))
-                return false;
-            else
-                return value;
+            var result = await CSharpScript.RunAsync<bool>(strCondition, options, context);
+            //var result = await CSharpScript.EvaluateAsync<bool>(strCondition, options, context);
+
+            return result.ReturnValue;
         }
 
         public class GlobalsDemo

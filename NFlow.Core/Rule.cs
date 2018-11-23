@@ -44,11 +44,11 @@ namespace NFlow.Core
         {
             get
             {
-                return context[name];
+                return context.Variables[name];
             }
             set
             {
-                context[name] = value;
+                context.Variables[name] = value;
             }
         }
 

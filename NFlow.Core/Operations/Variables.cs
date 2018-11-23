@@ -27,7 +27,7 @@ namespace NFlow.Core
             {
                 await Task.Factory.StartNew(() => {
                     var cfg = Config as VarConfig;
-                    context[cfg.Name] = cfg.Value;
+                    context.Variables[cfg.Name] = cfg.Value;
                 });
             }
         }

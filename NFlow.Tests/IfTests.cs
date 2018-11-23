@@ -24,8 +24,8 @@ namespace NFlow.Tests
         public async void IfTest_02()
         {
             var rule = Rule.Define("With context values")
-                        .If("Input == 1", Flow.New().SetVar("value", 1))
-                            .ElseIf("Input == 2", Flow.New().SetVar("value", 2))
+                        .If("(Int32)Variables[\"Input\"] == 1", Flow.New().SetVar("value", 1))
+                            .ElseIf("(Int32)Variables[\"Input\"] == 2", Flow.New().SetVar("value", 2))
                             .Else(Flow.New().SetVar("value", 10))
                         .End();
 
@@ -37,7 +37,7 @@ namespace NFlow.Tests
             //rule["input"] = 2;
             //await rule.Execute();
             //Assert.True((int)rule["value"] == 2);
-
+            
             //rule["input"] = 999;
             //await rule.Execute();
             //Assert.True((int)rule["value"] == 10);
