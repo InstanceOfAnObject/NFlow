@@ -6,9 +6,6 @@ namespace NFlow.Core
 {
     public class Rule : IRule
     {
-        private Flow flow;
-        public RuleContext context;
-
         public static Flow Define(string name = null, Flow definition = null)
         {
             Rule result = new Rule(name, definition);
@@ -20,15 +17,14 @@ namespace NFlow.Core
             return RuleSerializer.FromJson(json);
         }
 
-
         public Rule(string name = null, Flow flow = null)
         {
             if (flow == null)
                 flow = new Flow();
             flow.Rule = this;
 
-            this.flow = flow;
-            context = new RuleContext();
+            Flow = flow;
+            Context = new RuleContext();
 
             Name = name;
         }
@@ -38,23 +34,24 @@ namespace NFlow.Core
             get; set;
         }
 
-        public Flow Flow => flow;
+        public Flow Flow { get; }
+        public RuleContext Context { get; }
 
         public object this[string name]
         {
             get
             {
-                return context.Variables[name];
+                return Context.Variables[name];
             }
             set
             {
-                context.Variables[name] = value;
+                Context.Variables[name] = value;
             }
         }
 
         public Task Execute()
         {
-            return Flow.Execute(context);
+            return Flow.Execute(Context);
         }
     }
 }

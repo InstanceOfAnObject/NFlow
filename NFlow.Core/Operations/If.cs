@@ -1,5 +1,6 @@
 ﻿using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
+using NFlow.Core.Utils;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
@@ -22,7 +23,7 @@ namespace NFlow.Core
                 RootFlow = rootFlow;
 
                 Config = new IfOperationConfig();
-                (Config as IfOperationConfig).EvaluationPaths.Add(new Condition(condition), conditionRuleDefinition);
+                (Config as IfOperationConfig).EvaluationPaths.Add(new ConditionEvaluator(condition), conditionRuleDefinition);
             }
 
             public IOperationConfig Config { get; set; }
@@ -31,13 +32,13 @@ namespace NFlow.Core
 
             public IfOperation ElseIf(string condition, Flow conditionRuleDefinition)
             {
-                (Config as IfOperationConfig).EvaluationPaths.Add(new Condition(condition), conditionRuleDefinition);
+                (Config as IfOperationConfig).EvaluationPaths.Add(new ConditionEvaluator(condition), conditionRuleDefinition);
                 return this;
             }
 
             public Flow Else(Flow conditionRuleDefinition)
             {
-                (Config as IfOperationConfig).EvaluationPaths.Add(Condition.True(), conditionRuleDefinition);
+                (Config as IfOperationConfig).EvaluationPaths.Add(ConditionEvaluator.True(), conditionRuleDefinition);
                 RootFlow.AddContinuation(this);
                 return RootFlow;
             }
@@ -70,37 +71,6 @@ namespace NFlow.Core
         /// Gets the list of conditions and their execution continuations.
         /// An "if" can have multiple evaluation paths (if / else if / else if / ... / else), each represented by a dedicated flow.
         /// </summary>
-        public Dictionary<Condition, Flow> EvaluationPaths { get; } = new Dictionary<Condition, Flow>();
-    }
-
-    public class Condition
-    {
-        string strCondition;
-
-        public static Condition True()
-        {
-            return new Condition("true");
-        }
-
-        public Condition(string condition)
-        {
-            strCondition = condition;
-        }
-
-        public async Task<bool> Evaluate(RuleContext context)
-        {
-            ScriptOptions options = ScriptOptions.Default;
-            options.WithImports("System");
-
-            var result = await CSharpScript.RunAsync<bool>(strCondition, options, context);
-            //var result = await CSharpScript.EvaluateAsync<bool>(strCondition, options, context);
-
-            return result.ReturnValue;
-        }
-
-        public class GlobalsDemo
-        {
-            public int Input { get; set; }
-        }
+        public Dictionary<ConditionEvaluator, Flow> EvaluationPaths { get; } = new Dictionary<ConditionEvaluator, Flow>();
     }
 }

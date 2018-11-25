@@ -38,5 +38,13 @@ namespace NFlow.Core
                     variables.Add(name, value);
             }
         }
+
+        public Dictionary<string, object>.KeyCollection Keys
+        {
+            get
+            {
+                return variables.Keys;
+            }
+        }
     }
 }
