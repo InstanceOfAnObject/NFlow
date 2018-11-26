@@ -40,13 +40,13 @@ namespace NFlow.Core
             public Flow Else(Flow conditionRuleDefinition)
             {
                 (Config as IfOperationConfig).EvaluationPaths.Add(new EvaluationPath() { Condition = ConditionEvaluator.True(), Flow = conditionRuleDefinition });
-                RootFlow.AddContinuation(this);
+                RootFlow.Add(this);
                 return RootFlow;
             }
 
             public Flow EndIf()
             {
-                RootFlow.AddContinuation(this);
+                RootFlow.Add(this);
                 return RootFlow;
             }
 
@@ -72,7 +72,7 @@ namespace NFlow.Core
         /// Gets the list of conditions and their execution continuations.
         /// An "if" can have multiple evaluation paths (if / else if / else if / ... / else), each represented by a dedicated flow.
         /// </summary>
-        public List<EvaluationPath> EvaluationPaths { get; } = new List<EvaluationPath>();
+        public List<EvaluationPath> EvaluationPaths { get; set; } = new List<EvaluationPath>();
     }
 
     public class EvaluationPath

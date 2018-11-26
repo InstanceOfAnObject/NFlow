@@ -16,7 +16,7 @@ namespace NFlow.Tests
                            .Else(Flow.New().SetVar("value", 4))
                        .End();
 
-            await rule.Execute();
+            await rule.ExecuteAsync();
 
             Assert.True((int)rule["value"] == 2);
         }
@@ -31,15 +31,15 @@ namespace NFlow.Tests
                         .End();
 
             rule["input"] = 1;
-            await rule.Execute();
+            await rule.ExecuteAsync();
             Assert.True((int)rule["value"] == 1);
 
             rule["input"] = 2;
-            await rule.Execute();
+            await rule.ExecuteAsync();
             Assert.True((int)rule["value"] == 2);
 
             rule["input"] = 999;
-            await rule.Execute();
+            await rule.ExecuteAsync();
             Assert.True((int)rule["value"] == 10);
         }
     }

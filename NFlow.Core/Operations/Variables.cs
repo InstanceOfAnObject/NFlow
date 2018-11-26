@@ -7,10 +7,10 @@ namespace NFlow.Core
 {
     public static class Varialbles
     {
-        public static Flow SetVar(this Flow rule, string name, object value)
+        public static Flow SetVar(this Flow flow, string name, object value)
         {
-            rule.AddContinuation(new SetVarOperation(name, value));
-            return rule;
+            flow.Add(new SetVarOperation(name, value));
+            return flow;
         }
 
         public class SetVarOperation : IContinuation

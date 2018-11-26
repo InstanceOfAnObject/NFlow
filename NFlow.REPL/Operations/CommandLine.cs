@@ -8,7 +8,7 @@ namespace NFlow.REPL
     {
         public static Flow ConsoleOut(this Flow definition, string text)
         {
-            definition.AddContinuation(new WriteLineOperation(text));
+            definition.Add(new WriteLineOperation(text));
 
             return definition;
         }

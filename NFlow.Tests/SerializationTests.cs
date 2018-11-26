@@ -7,7 +7,7 @@ namespace NFlow.Tests
     public class SerializationTests
     {
         [Fact]
-        public void Serialization_SetVar()
+        public async void Serialization_SetVar()
         {
             // Set simple rule
             var rule1 = Rule.Define("Simple").SetVar("year", 2018).End();
@@ -17,7 +17,7 @@ namespace NFlow.Tests
             var rule2 = Rule.FromJson(jsonRule);
 
             // execute both rules
-            rule2.Execute();
+            await rule2.ExecuteAsync();
 
             // get the value from both rules
             Int32.TryParse(rule2["year"].ToString(), out var value2);
@@ -27,11 +27,11 @@ namespace NFlow.Tests
         }
 
         [Fact]
-        public void Serialization_If()
+        public async void Serialization_If()
         {
             // Set simple rule
             var rule1 = Rule.Define("Simple")
-                        .If("1 == 1", Flow.New().SetVar("value", 1).SetVar("value", 2))
+                        .If("1 == 1", Flow.New().SetVar("value", 99).SetVar("value", 2))
                             .ElseIf("1 == 2", Flow.New().SetVar("value", 3))
                             .Else(Flow.New().SetVar("value", 4))
                         .End();
@@ -41,7 +41,7 @@ namespace NFlow.Tests
             var rule2 = Rule.FromJson(jsonRule);
 
             // execute both rules
-            rule2.Execute();
+            await rule2.ExecuteAsync();
 
             // get the value from both rules
             Int32.TryParse(rule2["value"].ToString(), out var value);

@@ -12,6 +12,8 @@ namespace NFlow.Core
 
         object this[string name] { get; set; }
 
-        Task Execute();
+        void Execute();
+
+        Task ExecuteAsync();
     }
 }

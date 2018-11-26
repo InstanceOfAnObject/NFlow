@@ -49,7 +49,12 @@ namespace NFlow.Core
             }
         }
 
-        public Task Execute()
+        public void Execute()
+        {
+            Flow.Execute(Context).Wait();
+        }
+
+        public Task ExecuteAsync ()
         {
             return Flow.Execute(Context);
         }

@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace NFlow.Core
 {
-    public class Flow
+    public class Flow : List<IContinuation>
     {
-        List<IContinuation> continuations;
 
         /// <summary>
         /// Simple way to create a new Flow insntance
@@ -21,17 +20,9 @@ namespace NFlow.Core
 
         public Flow()
         {
-            continuations = new List<IContinuation>();
         }
 
         internal IRule Rule { get; set; }
-
-        public void AddContinuation(IContinuation continuation)
-        {
-            continuations.Add(continuation);
-        }
-
-        public ReadOnlyCollection<IContinuation> Continuations => continuations.AsReadOnly();
 
         public IRule End()
         {
@@ -40,7 +31,7 @@ namespace NFlow.Core
 
         public async Task Execute(RuleContext context)
         {
-            foreach (var continuation in this.Continuations)
+            foreach (var continuation in this)
             {
                 await continuation.Invoke(context);
             }
