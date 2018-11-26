@@ -18,12 +18,13 @@ namespace NFlow.Core
 
         public class IfOperation : IContinuation
         {
+            public IfOperation() { }
             public IfOperation(Flow rootFlow, string condition, Flow conditionRuleDefinition)
             {
                 RootFlow = rootFlow;
 
                 Config = new IfOperationConfig();
-                (Config as IfOperationConfig).EvaluationPaths.Add(new ConditionEvaluator(condition), conditionRuleDefinition);
+                (Config as IfOperationConfig).EvaluationPaths.Add(new EvaluationPath() { Condition = new ConditionEvaluator(condition), Flow = conditionRuleDefinition });
             }
 
             public IOperationConfig Config { get; set; }
@@ -32,13 +33,13 @@ namespace NFlow.Core
 
             public IfOperation ElseIf(string condition, Flow conditionRuleDefinition)
             {
-                (Config as IfOperationConfig).EvaluationPaths.Add(new ConditionEvaluator(condition), conditionRuleDefinition);
+                (Config as IfOperationConfig).EvaluationPaths.Add(new EvaluationPath() { Condition = new ConditionEvaluator(condition), Flow = conditionRuleDefinition });
                 return this;
             }
 
             public Flow Else(Flow conditionRuleDefinition)
             {
-                (Config as IfOperationConfig).EvaluationPaths.Add(ConditionEvaluator.True(), conditionRuleDefinition);
+                (Config as IfOperationConfig).EvaluationPaths.Add(new EvaluationPath() { Condition = ConditionEvaluator.True(), Flow = conditionRuleDefinition });
                 RootFlow.AddContinuation(this);
                 return RootFlow;
             }
@@ -53,11 +54,11 @@ namespace NFlow.Core
             {
                 var cfg = Config as IfOperationConfig;
 
-                foreach (var condition in cfg.EvaluationPaths.Keys)
+                foreach (var path in cfg.EvaluationPaths)
                 {
-                    if (await condition.Evaluate(context))
+                    if (await path.Condition.Evaluate(context))
                     {
-                        await cfg.EvaluationPaths[condition].Execute(context);
+                        await path.Flow.Execute(context);
                         break;
                     }
                 }
@@ -71,6 +72,12 @@ namespace NFlow.Core
         /// Gets the list of conditions and their execution continuations.
         /// An "if" can have multiple evaluation paths (if / else if / else if / ... / else), each represented by a dedicated flow.
         /// </summary>
-        public Dictionary<ConditionEvaluator, Flow> EvaluationPaths { get; } = new Dictionary<ConditionEvaluator, Flow>();
+        public List<EvaluationPath> EvaluationPaths { get; } = new List<EvaluationPath>();
+    }
+
+    public class EvaluationPath
+    {
+        public ConditionEvaluator Condition { get; set; }
+        public Flow Flow { get; set; }
     }
 }

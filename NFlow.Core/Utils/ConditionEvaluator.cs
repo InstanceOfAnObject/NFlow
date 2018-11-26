@@ -15,14 +15,15 @@ namespace NFlow.Core.Utils
             return new ConditionEvaluator("true");
         }
 
-        public ConditionEvaluator(string condition)
+        public ConditionEvaluator() { }
+        public ConditionEvaluator(string condition) : this()
         {
             Condition = condition;
         }
 
-        private string Condition { get; }
-        private List<Assembly> References { get; } = new List<Assembly>();
-        private List<string> Imports { get; } = new List<string>() { "System", "System.Collections", "System.Collections.Generic" };
+        public string Condition { get; set; }
+        public List<Assembly> References { get; set; } = new List<Assembly>();
+        public List<string> Imports { get; set; } = new List<string>() { "System", "System.Collections", "System.Collections.Generic" };
 
         public void AddReferences(params Assembly[] references)
         {

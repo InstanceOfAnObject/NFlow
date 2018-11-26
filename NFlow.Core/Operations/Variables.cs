@@ -23,9 +23,9 @@ namespace NFlow.Core
 
             public IOperationConfig Config { get; set; }
 
-            public async Task Invoke(RuleContext context)
+            public Task Invoke(RuleContext context)
             {
-                await Task.Factory.StartNew(() => {
+                return Task.Factory.StartNew(() => {
                     var cfg = Config as VarConfig;
                     context.Variables[cfg.Name] = cfg.Value;
                 });
