@@ -5,15 +5,16 @@ VisualStudioVersion = 15.0.27406.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7454BB13-A64B-494E-A630-2ED569D36D51}"
 	ProjectSection(SolutionItems) = preProject
+		Mapper.md = Mapper.md
 		Images\PairOddDot.JPG = Images\PairOddDot.JPG
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NFlow.REPL", "NFlow.REPL\NFlow.REPL.csproj", "{6204695F-248D-4EB9-884C-FEEF62B71288}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NFlow.REPL", "NFlow.REPL\NFlow.REPL.csproj", "{6204695F-248D-4EB9-884C-FEEF62B71288}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NFlow.Core", "NFlow.Core\NFlow.Core.csproj", "{C34B3423-C4A5-4FCE-89AC-F4745A84B3E2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NFlow.Core", "NFlow.Core\NFlow.Core.csproj", "{C34B3423-C4A5-4FCE-89AC-F4745A84B3E2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NFlow.Tests", "NFlow.Tests\NFlow.Tests.csproj", "{57827283-F608-41F3-82D5-CE87B3A292D7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NFlow.Tests", "NFlow.Tests\NFlow.Tests.csproj", "{57827283-F608-41F3-82D5-CE87B3A292D7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -36,8 +37,6 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F24AC419-EE27-4E8B-A867-9C3853AF3E85}

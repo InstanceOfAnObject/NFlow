@@ -8,7 +8,7 @@ namespace NFlow.Tests
     public class IfTests
     {
         [Fact]
-        public async void IfTest_01()
+        public async Task IfTest_01()
         {
            var rule = Rule.Define("Simple")
                        .If("1 == 1", Flow.New().SetVar("value", 1).SetVar("value", 2))
